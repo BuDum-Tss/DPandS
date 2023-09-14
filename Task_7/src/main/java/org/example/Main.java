@@ -1,9 +1,13 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Main {
 
@@ -17,23 +21,28 @@ public class Main {
     int threads = Integer.parseInt(args[1]);
 
     ExecutorService executor = Executors.newFixedThreadPool(threads);
-    Double pi = 0.0;
-
+    double pi;
+    List<Future> futures = new ArrayList<>();
     for (int i = 0; i < threads; i++) {
       int finalI = i;
-      try {
-        pi += executor.submit(() -> calculatePi(finalI, threads, iterations)).get();
-      } catch (InterruptedException | ExecutionException e) {
-        throw new RuntimeException(e);
-      }
+      futures.add(executor.submit(() -> calculatePi(finalI, threads, iterations)));
     }
-    executor.shutdown();
 
+    executor.shutdown();
     try {
       executor.awaitTermination(1, TimeUnit.MINUTES);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+
+    pi = futures.stream().map(future -> {
+      try {
+        return (double) future.get();
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
+      }
+    }).mapToDouble(Double::doubleValue).sum();
+
     pi = pi * 4;
     System.out.println("Result: " + pi);
   }
