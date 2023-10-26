@@ -14,7 +14,7 @@ public class Main {
     Semaphore partC = new Semaphore(0);
 
     List<Thread> producers = new ArrayList<>();
-    producers.add(new Thread(new SomeProducer("Widget", widget, new Semaphore[]{widget, module}, 0)));
+    producers.add(new Thread(new SomeProducer("Widget", widget, new Semaphore[]{partC, module}, 0)));
     producers.add(new Thread(new SomeProducer("Module", module, new Semaphore[]{partA, partB}, 0)));
     producers.add(new Thread(new SomeProducer("Part A", partA, new Semaphore[]{}, 1000)));
     producers.add(new Thread(new SomeProducer("Part B", partB, new Semaphore[]{}, 2000)));
