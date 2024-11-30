@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "taskd5-d6"
+version = "0.1.0"
+description = ""
+authors = ["coffe <a.potapova8@g.nsu.ru>"]
+readme = "README.md"
+packages = [{include = "airlines"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+sqlmodel = "^0.0.18"
+psycopg2 = "^2.9.9"
+uvicorn = "^0.29.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.6"
+mypy = "^1.7.1"
+
+[tool.poetry.scripts]
+"airlines" = "airlines:entrypoint"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
