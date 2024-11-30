@@ -100,10 +100,10 @@ def find_routes(origin: str,
 
 
 def calculate_amount(flight: Flight, fare_conditions: FareConditions, session) -> float:
-    tickets = session.query(TicketFlight).filter(TicketFlight.flight_id == flight.flight_id,
-                                                 TicketFlight.fare_conditions == fare_conditions).all()
-    if len(tickets) > 0:
-        return tickets[0].amount
+    ticket = session.query(TicketFlight).filter(TicketFlight.flight_id == flight.flight_id,
+                                                 TicketFlight.fare_conditions == fare_conditions).one()
+    if ticket is not None:
+        return ticket.amount
     else:
         return 0
 
